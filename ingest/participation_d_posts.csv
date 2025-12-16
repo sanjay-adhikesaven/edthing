@@ -1,0 +1,166 @@
+id,title,author,content,posted_at,url,links,attachments
+7451971,Special Participation D: Shampoo + Adafactor for HW12,Abdelaziz Mohamed,,2025-12-11T17:37:21.05447+11:00,https://edstem.org/us/courses/84647/discussion/7451971,,
+7451372,Special Participation D: Lion and SOAP in HW3,Justin Yang,"I added subparts introducing and exploring the Lion and SOAP optimizers in HW3 coding.**Summary:**Students are guided through implementing a simple version of each optimizer and comparing it to the other optimizers previously explored in the homework. In addition, code is given for small hyperparameter sweeps for both Lion and SOAP which students use to answer some written questions.",2025-12-11T15:29:52.812491+11:00,https://edstem.org/us/courses/84647/discussion/7451372,,
+7430922,Special Participation D: Experiment and Hyperparameter Sweep on SOAP and Lion Optimizers in HW 6,Jiayi Zhang,"In the attached notebook, I implemented two modern optimizers SOAP and Lion with coding agents and then integrated them with other optimizers used in the training tasks. I made a comparison between the performance of hand-picked learning rates with SOAP and Lion along with the performance of other optimizers presented in the notebook. Specifically, SOAP with a 1e-2 learning rate performs only better than Muon with 1e-2, and Lion has the fourth performance with a learning rate of 1e-3. Below is a graph with all of the optimizers used.
+
+![Image](https://static.us.edusercontent.com/files/AtE69FgiqciHCZgXccqCCZf2)
+
+In addition, I also did a brief hyperparameter sweeping similar to the sweeps to Muon and AdamW. SOAP ends up having a 50.05% validation accuracy with a learning rate of 0.01, while Lion has the best validation rate of 68.61% at learning rate of 0.0005. It seems that overall, Lion has the best performance under this simple experiment.
+
+--- Hyperparameter Sweep Results ---
+
+SOAP:
+
+(lr=0.01): 50.05%
+
+(lr=0.005): 45.14%
+
+(lr=0.001): 30.95%
+
+(lr=0.0005): 25.58%
+
+Best hyperparameters for SOAP: lr=0.01 with validation accuracy 50.05%
+
+Lion:
+
+(lr=0.01): 10.60%
+
+(lr=0.005): 23.50%
+
+(lr=0.001): 68.60%
+
+(lr=0.0005): 68.61%
+
+Best hyperparameters for Lion: lr=0.0005 with validation accuracy 68.61%
+
+Google Colab Notebook:
+
+[](https://drive.google.com/file/d/1znNlvhV8TdtGcmJ-2xQt3N3syeuLcW_C/view?usp=sharing)__https://drive.google.com/file/d/1znNlvhV8TdtGcmJ-2xQt3N3syeuLcW_C/view?usp=sharing__",2025-12-08T17:37:19.801618+11:00,https://edstem.org/us/courses/84647/discussion/7430922,https://static.us.edusercontent.com/files/AtE69FgiqciHCZgXccqCCZf2); https://drive.google.com/file/d/1znNlvhV8TdtGcmJ-2xQt3N3syeuLcW_C/view?usp=sharing)__https://drive.google.com/file/d/1znNlvhV8TdtGcmJ-2xQt3N3syeuLcW_C/view?usp=sharing__,
+7430849,Special Participation D: Exploring Different Learning Rates and Batch Sizes on Homework 5,Jiayi Zhang,"In the attached notebook, I adjusted the CIFAR-10 task to make it adapt it to a parameter sweep on different learning rate and different batch sizes. The model is experiencing underfitting with the learning rates I have explored, and the batch sizes have a less effect on the performance under the underfitting than learning rates.
+
+I also explore rerunning the experiments with both clean and cheating features on Muon's variant optimizers MuonLion and MuonAdamW. Since these optimizers are not available in Pytorch, I used ChatGPT 5.1 to help me to implement these two Muon variants. Both optimizers have a worse performance than traditional optimizers like SGD and Adam, and showed some interesting behaviors. I added some questions regarding to these optimizers to this task at the end.
+
+Google Colab Notebook:
+
+[](https://drive.google.com/file/d/1JhwudZF6UMnLjLDnCRqoS0qZySEdzL2D/view?usp=sharing)https://drive.google.com/file/d/1JhwudZF6UMnLjLDnCRqoS0qZySEdzL2D/view?usp=sharing",2025-12-08T17:21:12.239915+11:00,https://edstem.org/us/courses/84647/discussion/7430849,https://drive.google.com/file/d/1JhwudZF6UMnLjLDnCRqoS0qZySEdzL2D/view?usp=sharing)https://drive.google.com/file/d/1JhwudZF6UMnLjLDnCRqoS0qZySEdzL2D/view?usp=sharing,
+7429801,Special Participation D: Lion and Muon in Homework 11,Diana Kohr,"HW 11 coding problem 4 (Scaling Laws of Batch Size) was focused on the effect of batch size on  optimal learning rates across SGD and Adam. I added Lion and Muon to the list of optimizers to investigate. While the deliverables are the same as for SGD and Adam, each of them presents a specific difficulty.
+
+Lion isn't implemented in pytorch.optim, so students have to import it separately. Muon only takes 2D parameters, so students have to work around this. The new problems and my notebook with solutions are below (made use of Gemini in Colab).
+
+![Image](https://static.us.edusercontent.com/files/2a7GYksrOAs07KoepeYkFMtf)
+
+![Image](https://static.us.edusercontent.com/files/R973dK6TPqDNFpYk3mVVggZ0)",2025-12-08T14:22:48.8061+11:00,https://edstem.org/us/courses/84647/discussion/7429801,https://static.us.edusercontent.com/files/2a7GYksrOAs07KoepeYkFMtf); https://static.us.edusercontent.com/files/R973dK6TPqDNFpYk3mVVggZ0),
+7428945,Special Participation D: Learning Rate with Batch Size Scaling on HW 12,Nazar Ospanov,"I extended Homework 12 by adding**learning-rate scaling based on batch size**, following the ideas from a recent 2024 paper on how learning rate should change when the batch size changes. This fits the goal of Special Participation Part D, which asks us to bring modern training practices into the assignment in a way that is easy to use and understand.
+
+To do this, I updated both the q_vae.ipynb notebook and the code in the cs182hw12 folder. In utils.py, I implemented a small helper function called scale_learning_rate_with_batch_size that adjusts the learning rate depending on the batch size the model is using. It supports the two common rules people use in practice:
+
+1. **Linear scaling:**$\text{lr}{\text{new}} = \text{lr}\text{base} \cdot \frac{B_{\text{new}}}{B_{\text{base}}}$
+1. **Square-root scaling:**$\text{lr}{\text{new}} = \text{lr}\text{base} \cdot \sqrt{\frac{B_{\text{new}}}{B_{\text{base}}}}$
+
+Then, in experiment.py, I applied this function so the optimizer automatically updates its learning rate based on the batch size chosen in the config. This lets the training loop behave more sensibly when using bigger or smaller batches, without needing to manually retune anything.
+
+Overall, the changes are small and easy to toggle, but they make the VAE training setup feel much more “modern,” since batch-size–dependent learning-rate scaling is now a standard part of deep-learning practice.
+
+Here are the zip files of the extended homework and solutions:",2025-12-08T12:27:50.296354+11:00,https://edstem.org/us/courses/84647/discussion/7428945,,
+7428884,Special Participation D: Lion Optimizer on HW 12,Nazar Ospanov,"I extended Homework 12 by adding support for the**Lion optimizer**, a more modern and lightweight alternative to Adam. Since this option asks us to introduce new, up-to-date optimization methods into the assignment, I chose Lion because it reflects current trends in training, focusing on momentum and sign-based updates rather than heavier second-moment tracking.
+
+To implement this, I extended the q_vae.ipynb notebook as well as modified the direct cs182hw12 folder. I created a new Lion optimizer class in`utils.py`. The class handles momentum updates, applies the sign() operation to determine the update direction, and includes weight decay. I followed the standard defaults suggested by the paper:`lr = 1e-4`,`betas = (0.9, 0.99)`, and`weight_decay = 1.0`. I then integrated Lion into the training pipeline by modifying build_optimizers in experiment.py so that setting`config.use_lion = 1`switches the model to Lion automatically, while all existing behavior stays the same when Lion is not enabled. This works for both the VAE and GAN configurations used in the homework.
+
+Overall, this addition makes it easy to compare Adam and Lion in the same codebase and experiment with how a more modern optimizer performs, all while keeping changes minimal and easy to toggle.
+
+Here are the zip files of the extended homework and solutions:",2025-12-08T12:21:19.006498+11:00,https://edstem.org/us/courses/84647/discussion/7428884,,
+7416258,Special participation D : Adding Lion to HW06,Fantine Mpacko Priso,"I implemented Lion on HW06, after adding Manifold MuOn too to have more methods to compare. Questions associated to this new section are:
+
+**Question 10 :**Briefly explain how Lion's update is different from AdamW in terms of:
+
+1. number of state tensors per parameter
+1. use (or non-use) of the gradient magnitude.
+
+**Question 11**: Uncomment the Lion contribution to the optimizer dictionnary. Compare Lion and AdamW:
+
+1. Which optimizer reaches lower training loss after 5 epochs?
+1. Which optimizer achieves higher test accuracy?
+1. Does Lion seem to converge faster early in training, slower, or about the same?
+
+The resulting plot is :
+
+![Image](https://static.us.edusercontent.com/files/294ghAgzbBNHFO2nLObhJraU)",2025-12-06T09:14:09.027368+11:00,https://edstem.org/us/courses/84647/discussion/7416258,https://static.us.edusercontent.com/files/294ghAgzbBNHFO2nLObhJraU),
+7412717,Special Participation D: HW6 Exploration of the Polar Express (Muon Variant) & Lion Optimizers,Nicolas Rault-Wang,"I added four additional parts to the Implementing Muon question in homework 6, providing a guided exploration of two recent computationally-efficient optimizer alternatives to Muon and AdamW:
+
+- [](https://arxiv.org/abs/2505.16932)**Polar Express**(Muon Variant) and
+- [](https://arxiv.org/abs/2302.06675)**Lion**(EvoLved Sign Momentum)
+
+New question summary:
+
+1. (Code) An introduction to Polar Express, a variant of Muon that replaces Newton-Schulz orthogonalization with a schedule of minimax-optimized polynomials. Since compute efficiency is a core feature of this variant, the question challenges you to find an efficient (minimal matmuls) PyTorch implementation for the update $$X_{k+1}\leftarrow  \alpha_k X_k+ \beta_k X_k^3 + \gamma_k X_k^5$$
+1. (Code) An intro to the Lion optimizer, a memory-efficient, non-adaptive optimizer that relies on the sign function of an interpolation of momentum and gradient tensors to determine the update direction.
+1. (Written) Empirical evaluation of Muon+PolarExpress, Muon+Newton-Schulz, Lion, AdamW, and SGD.
+1. (Optional) Hyperparameter tuning for Polar Express and Lion to ensure fair comparisons.
+
+![Image](https://static.us.edusercontent.com/files/KD7Wh9TXKrFaxk9WhzhtPFO3)
+
+I've included the blank and solution notebooks for you below.
+
+Colab links:
+
+- [](https://colab.research.google.com/github/nraultwang/cs182/blob/main/hw06/code/NRW_SP-D_q_coding_muon_BLANK.ipynb)blank notebook
+- [](https://colab.research.google.com/github/nraultwang/cs182/blob/main/hw06/code/NRW_SP-D_q_coding_muon_SOLUTION.ipynb)solution notebook
+
+Notebook files:
+
+Links for the archive:
+
+Personal website:[](https://nraultwang.github.io/)https://nraultwang.github.io/, Github:[](https://github.com/nraultwang)https://github.com/nraultwang",2025-12-05T18:22:52.659984+11:00,https://edstem.org/us/courses/84647/discussion/7412717,"https://arxiv.org/abs/2505.16932)**Polar; https://arxiv.org/abs/2302.06675)**Lion**(EvoLved; https://static.us.edusercontent.com/files/KD7Wh9TXKrFaxk9WhzhtPFO3); https://colab.research.google.com/github/nraultwang/cs182/blob/main/hw06/code/NRW_SP-D_q_coding_muon_BLANK.ipynb)blank; https://colab.research.google.com/github/nraultwang/cs182/blob/main/hw06/code/NRW_SP-D_q_coding_muon_SOLUTION.ipynb)solution; https://nraultwang.github.io/)https://nraultwang.github.io/,; https://github.com/nraultwang)https://github.com/nraultwang",
+7411740,Special Participation D: HW7 RNN task using AdamW vs. SOAP,Tianqu He,"I created a student assignment notebook focused on the SOAP (**S**hampo**O**with**A**dam in the**P**reconditioner's eigenbasis) optimizer, consisting of two main parts:
+
+1. Mathematical Implementation (Gradient Rotation):1. Designed a coding task where students implement the core SOAP operation: projecting the gradient into the eigenbasis (Gprojected​=QLT​⋅G⋅QR​).
+1. Provided a`SimpleSOAP`optimizer wrapper that integrates this student-written function to simulate matrix preconditioning.
+1. Experimental Analysis (RNN Stress Test):1. Set up the ""Adding Problem"" (a standard RNN benchmark) to test optimizer stability on long-term dependencies.
+1. Constructed a Hyperparameter Sensitivity Sweep comparing AdamW vs. SOAP across logarithmically spaced learning rates.
+1. Included visualization code to demonstrate SOAP's superior stability and ""shifted"" optimal learning rate window compared to AdamW.
+
+Student notebook:[](https://colab.research.google.com/drive/15gAh01QQKscfbBbXvnGt7MgYOC3j4lTG#scrollTo=ZCwSKgXWW-nk)https://colab.research.google.com/drive/15gAh01QQKscfbBbXvnGt7MgYOC3j4lTG#scrollTo=ZCwSKgXWW-nk
+
+Solutions:
+
+[](https://colab.research.google.com/drive/1-AdCaTn1n6D5ThprVc7sM0A3b7TIx09n#scrollTo=uNGvVyYhYJzP)https://colab.research.google.com/drive/1-AdCaTn1n6D5ThprVc7sM0A3b7TIx09n#scrollTo=uNGvVyYhYJzP",2025-12-05T14:59:51.904185+11:00,https://edstem.org/us/courses/84647/discussion/7411740,https://colab.research.google.com/drive/15gAh01QQKscfbBbXvnGt7MgYOC3j4lTG#scrollTo=ZCwSKgXWW-nk)https://colab.research.google.com/drive/15gAh01QQKscfbBbXvnGt7MgYOC3j4lTG#scrollTo=ZCwSKgXWW-nk; https://colab.research.google.com/drive/1-AdCaTn1n6D5ThprVc7sM0A3b7TIx09n#scrollTo=uNGvVyYhYJzP)https://colab.research.google.com/drive/1-AdCaTn1n6D5ThprVc7sM0A3b7TIx09n#scrollTo=uNGvVyYhYJzP,
+7410990,Special participation D : addind manifold MuOn to HW06,Fantine Mpacko Priso,"I implemented Manifold MuOn (Bernstein, 2025) at the end of HW06 to give another version of MuOn to compare. Feel free to experiment ! These are the final figures obtained after completing the code:
+
+![Image](https://static.us.edusercontent.com/files/kTb82SAh9dgfh34krpPNSn9v)",2025-12-05T13:04:37.879759+11:00,https://edstem.org/us/courses/84647/discussion/7410990,https://static.us.edusercontent.com/files/kTb82SAh9dgfh34krpPNSn9v),
+7409159,Special Participation D: HW 4 Lion vs AdamW on CNN transfer learning and Newton-Schulz coefficients,Manhar Gupta,"For HW4, I designed a problem to implement a reusable train_validation loop, visualise the effect of two commonly used sets of Newton-Schulz coefficients on matrix singular values, implement Lion optimizer from scratch which culminates in a systematic comparison of Lion vs AdamW on transfer learning of ResNet18 on the CIFAR-10 dataset.
+
+There is a three-part structure to the problem:
+
+Training Infrastructure
+
+1. Implement a reusable train_validation_loop() function for PyTorch
+1. Test on SimpleCNN (not to be implemented by students) to validate correctness
+
+Newton-Schulz Iterations
+
+1. Implement Newton-Schulz iterations to compute orthogonalized version of the input matrix
+1. Visualize how aggressive vs. stable coefficients affect singular value convergence
+1. The importance of orthogonalization for gradient flow and why Muon can't optimize a large number of parameters in CNNs (2D-only constraint)
+1. Ending analysis questions based on Newton-Schulz coefficients and convergence
+
+Lion Optimizer Implementation & Comparison
+
+1. Implement Lion optimizer based on the original paper and test on SimpleCNN
+1. Do hyperparameter grid search which tests various combinations of learning rate, batch size and weight decay (overall 27 combinations). Weight decay was added based on the suggestion at #394
+1. Train ResNet18 with best Lion config vs AdamW baseline and evaluating both models on train, validation progression and test set inference set.",2025-12-05T09:01:59.669103+11:00,https://edstem.org/us/courses/84647/discussion/7409159,,
+7389679,Special Participation D: MuP in Hw7,Ishir Garg,"I created an extension to Q1 of HW7 that tries to reinforce the ideas in MuP in the context of RNNs. There are two main parts of this notebook:
+
+1. Personally, I always found it confusing whether the correct MuP initialization was 1 / n, or 1 / sqrt(n), or something else, so the first part tries to empirically examine the correct initialization scheme  and connect this to an eigenvalue analysis for RNNs.
+
+2. The second part empirically shows how per-layer learning rates in an RNN can help for better hyper-parameter transfer on a dataset.
+
+I created both a solutions and student notebook, attached below",2025-12-02T18:26:25.496528+11:00,https://edstem.org/us/courses/84647/discussion/7389679,,
+7387144,Special Participation D: Comparative Study of Muon & µP (and other optimizers) for GNN Training on Zachary’s Karate Club,Tianhao Qian,"In this write-up, I systematically benchmarked several modern optimization approaches for training a Graph Convolutional Network (GCN) on the Zachary’s Karate Club graph dataset, including SGD, µP, Muon, a Muonvariant, SOAP, and Lion. I evaluated them using training/validation loss, test accuracy, convergence speed, and computational efficiency, and I also implemented an early-stopping setup and described key optimizer mechanics (e.g., Muon’s Newton–Schulz orthogonalization; µP-style parameter-group learning-rate scaling).My main findings are that**Muon can reach the best final accuracy (up to 100%)**, while**µP offers the best speed–accuracy trade-off**(fast convergence with strong accuracy), and SOAP/Lion tend to perform poorly in this small full-graph training regime.The Github repository:[](https://github.com/hysteri1a/EECS182-Comparative-Study-of-Modern-Optimizers-Muon-P-for-GNN-Training-on-Zachary-s-Karate-Club)hysteri1a/EECS182-Comparative-Study-of-Modern-Optimizers-Muon-P-for-GNN-Training-on-Zachary-s-Karate-Club",2025-12-02T11:57:02.93077+11:00,https://edstem.org/us/courses/84647/discussion/7387144,https://github.com/hysteri1a/EECS182-Comparative-Study-of-Modern-Optimizers-Muon-P-for-GNN-Training-on-Zachary-s-Karate-Club)hysteri1a/EECS182-Comparative-Study-of-Modern-Optimizers-Muon-P-for-GNN-Training-on-Zachary-s-Karate-Club,
+7267863,Special Participation D second submission HW4 Joseph Berry,Joe Berry,"I edited HW4 to include a section about AdaMuon and how changing batch size and learning rate may effect performance of MLP vs CNNI edited HW 3 Solutions to include the Muon variants AdaMuon and LiMuon and to display how changing learning rates and batch sizes effect the RMS norms.Si, Chongjie, et al. ""AdaMuon: Adaptive Muon Optimizer.""*arXiv*, 18 Aug. 2025,[](https://doi.org/10.48550/arXiv.2507.11005)https://doi.org/10.48550/arXiv.2507.11005.Jordan, Keller, et al. ""Muon: An Optimizer for Hidden Layers in Neural Networks.""*Keller Jordan Blog*, 8 Dec. 2024,[](http://kellerjordan.github.io/posts/muon/)kellerjordan.github.io/posts/muon/.
+
+Bernstein, Jeremy, and Laker Newhouse. ""Old Optimizer, New Norm: An Anthology.""*arXiv*, 6 Dec. 2024,[](https://doi.org/10.48550/arXiv.2409.20325)https://doi.org/10.48550/arXiv.2409.20325.",2025-11-07T05:40:26.301835+11:00,https://edstem.org/us/courses/84647/discussion/7267863,"https://doi.org/10.48550/arXiv.2507.11005)https://doi.org/10.48550/arXiv.2507.11005.Jordan,; http://kellerjordan.github.io/posts/muon/)kellerjordan.github.io/posts/muon/.; https://doi.org/10.48550/arXiv.2409.20325)https://doi.org/10.48550/arXiv.2409.20325.",
+7265176,Special Participation D HW 3 thread Joseph Berry,Joe Berry,"I edited HW 3 Solutions to include the Muon variants AdaMuon and LiMuon and to display how changing learning rates and batch sizes effect the RMS norms.The new code and questions-solutions are at the bottom of the fileSi, Chongjie, et al. ""AdaMuon: Adaptive Muon Optimizer.""*arXiv*, 18 Aug. 2025,[](https://doi.org/10.48550/arXiv.2507.11005)https://doi.org/10.48550/arXiv.2507.11005.Jordan, Keller, et al. ""Muon: An Optimizer for Hidden Layers in Neural Networks.""*Keller Jordan Blog*, 8 Dec. 2024, kellerjordan.github.io/posts/muon/.
+
+Huang, Feihu, et al. ""LiMuon: Light and Fast Muon Optimizer for Large Models.""*arXiv*, 19 Sept. 2025,[](https://doi.org/10.48550/arXiv.2509.14562)https://doi.org/10.48550/arXiv.2509.14562.
+
+Bernstein, Jeremy, and Laker Newhouse. ""Old Optimizer, New Norm: An Anthology.""*arXiv*, 6 Dec. 2024,[](https://doi.org/10.48550/arXiv.2409.20325)https://doi.org/10.48550/arXiv.2409.20325.",2025-11-06T14:41:00.93811+11:00,https://edstem.org/us/courses/84647/discussion/7265176,"https://doi.org/10.48550/arXiv.2507.11005)https://doi.org/10.48550/arXiv.2507.11005.Jordan,; https://doi.org/10.48550/arXiv.2509.14562)https://doi.org/10.48550/arXiv.2509.14562.; https://doi.org/10.48550/arXiv.2409.20325)https://doi.org/10.48550/arXiv.2409.20325.",
