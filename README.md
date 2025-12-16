@@ -1,315 +1,310 @@
-# EdThing - Student Participation Documentation System
+# Special Participation D Website
 
-A production-ready web application for documenting and crediting student participation submissions from **EdStem course 84647**, specifically designed for tracking Muon and MuP updates.
+A simple web application for documenting and displaying student participation submissions from **EdStem course 84647**, specifically filtering for "Participation D" posts.
 
 ## 🚀 Features
 
-- **EdStem Integration**: Automatically sync posts using the `edpy` library
-- **Smart Filtering**: Identifies Participation D posts with keyword-based and category-based filtering
-- **Full-Text Search**: PostgreSQL-powered search across titles, content, attachments, and links
-- **Rich UI**: Clean, Ed-like interface with markdown rendering and attachment previews
-- **Authentication**: Configurable password-based access control
-- **Link Extraction**: Automatically detects and categorizes GitHub repos, personal sites, and documentation
-- **Attachment Handling**: Metadata storage with download links for files
-- **Docker Ready**: Complete containerized setup for development and deployment
+- **CSV-Based Storage**: Simple CSV file storage - no database required
+- **EdStem Integration**: Fetches posts using the `edapi` library
+- **Smart Filtering**: Only shows posts with "Participation D" in the title
+- **LaTeX Rendering**: Full LaTeX support via KaTeX
+- **Student Filtering**: Filter posts by student authors
+- **Search**: Keyword search across post titles and content
+- **Markdown Support**: Rich markdown rendering with GFM support
+- **Authentication**: Password-based access control
+- **Vercel Ready**: Deploy directly to Vercel
 
 ## 🏗️ Architecture
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│     EdStem      │    │   Ingestion     │    │   Database      │
-│     API         │◄──►│   Service       │◄──►│   (Postgres)    │
-│                 │    │   (Python)      │    │                 │
+│     EdStem      │    │   CSV Export    │    │   CSV File      │
+│     API         │◄──►│   (Python)      │───►│   (Data)        │
+│                 │    │                 │    │                 │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
-                                ▲
-                                │
-                       ┌─────────────────┐
-                       │   Web App       │
-                       │   (Next.js)     │
-                       │                 │
-                       └─────────────────┘
+                                                       │
+                                                       ▼
+                                              ┌─────────────────┐
+                                              │   Web App       │
+                                              │   (Next.js)     │
+                                              │                 │
+                                              └─────────────────┘
 ```
 
 ## 📋 Prerequisites
 
-- Docker and Docker Compose
-- EdStem course access with API credentials
+- Docker and Docker Compose (for local development)
+- EdStem API token
 - Node.js 18+ (for local development)
-- Python 3.11+ (for local development)
+- Python 3.11+ (for CSV export)
 
 ## 🛠️ Quick Start
 
-1. **Clone and setup environment**:
-   ```bash
-   git clone <repository-url>
-   cd edthing
-   cp env.example .env
-   ```
-
-2. **Configure environment variables**:
-   Edit `.env` with your EdStem credentials and settings:
-   ```env
-   # Database
-   DATABASE_URL=postgresql://edthing:edthing@localhost:5432/edthing
-
-   # EdStem API Credentials (UC Berkeley SSO)
-   ED_USERNAME=sanjay.adhikesaven@berkeley.edu
-   ED_PASSWORD=your-edstem-password  # May not be needed for SSO
-   ED_COURSE_ID=84647
-
-   # Site Configuration
-   SITE_PASSWORD=cs182
-   NEXTAUTH_SECRET=100
-   ```
-
-3. **Start the development environment**:
-   ```bash
-   docker-compose up -d
-   ```
-
-4. **Initialize the database**:
-   ```bash
-   docker-compose exec ingest python -m ingest.sync --manual
-   ```
-
-5. **Access the application**:
-   - Web UI: http://localhost:3000
-   - Sign in with your configured `SITE_PASSWORD`
-
-## 🛠️ Alternative Setup (Without Docker Compose)
-
-If you don't have Docker Compose installed, use the manual setup scripts:
-
-1. **Run manual setup**:
-   ```bash
-   ./setup-manual.sh
-   ```
-
-2. **Run data ingestion**:
-   ```bash
-   ./run-ingest.sh
-   ```
-
-3. **Stop services**:
-   ```bash
-   ./stop-services.sh
-   ```
-
-## 📖 Detailed Setup
-
-### 1. EdStem Configuration
-
-To get your EdStem credentials:
-
-1. Navigate to your specific course: https://edstem.org/us/courses/84647/
-2. Verify you're on the correct course (the course ID `84647` is already configured)
-3. Use your UC Berkeley SSO credentials
-
-**SSO Users (UC Berkeley)**: If your organization uses SSO, you may not need to set `ED_PASSWORD`. The `edpy` library should handle SSO authentication automatically with just your username.
-
-**Username**: `sanjay.adhikesaven@berkeley.edu` (already configured)
-
-**Important**: The system is configured to pull from course ID `84647`. If you need to change this, update the `ED_COURSE_ID` in your `.env` file.
-
-**Security Note**: Store credentials securely and never commit them to version control.
-
-### 2. Database Setup
-
-The application uses PostgreSQL with the following key features:
-- Full-text search on posts (titles, content)
-- JSON storage for flexible metadata
-- Automatic search vector updates via triggers
-- Indexed queries for performance
-
-### 3. Ingestion Service
-
-The ingestion service:
-- Uses `edpy` to fetch EdStem posts
-- Filters for Participation D content using configurable rules
-- Extracts attachments, links, and metadata
-- Runs incremental syncs to avoid re-processing
-
-**Participation D Filtering Rules**:
-- Keywords: "Muon", "MuP", "Shampoo", "uP", "participation"
-- Categories: "Participation D"
-- Configurable via `site_config` table
-
-### 4. Web Application
-
-Built with Next.js 14 and features:
-- **Search**: Full-text search with instant results
-- **Filters**: By student, tags, date range, attachments
-- **Browse**: Posts by recency, reference count, student
-- **Authentication**: Password-based with session management
-- **Responsive**: Mobile-friendly design
-
-## 🔧 Configuration
-
-### Site Settings
-
-Configure via database `site_config` table:
-
-```sql
--- Update site settings
-UPDATE site_config
-SET value = '{
-  "public_site": false,
-  "require_auth": true,
-  "site_title": "Student Participation Documentation",
-  "site_description": "Browse and search student submissions"
-}'::jsonb
-WHERE key = 'site_settings';
-```
-
-### Participation Rules
-
-Customize filtering rules:
-
-```sql
-UPDATE site_config
-SET value = '{
-  "keywords": ["Muon", "MuP", "Shampoo", "uP"],
-  "allowed_categories": ["Participation D"],
-  "tag_mappings": {
-    "Muon": ["Muon", "MUON"],
-    "MuP": ["MuP", "MUP", "μP"],
-    "Shampoo": ["Shampoo", "SHAMPOO"],
-    "uP": ["uP", "UP", "μP"]
-  }
-}'::jsonb
-WHERE key = 'participation_rules';
-```
-
-## 🚀 Deployment
-
-### Development
+### 1. Setup Environment
 
 ```bash
-# Start all services
-docker-compose up -d
+git clone <repository-url>
+cd edthing
+cp .env.example .env
+```
+
+### 2. Configure Environment Variables
+
+Edit `.env` with your EdStem credentials:
+
+```env
+# EdStem API
+ED_API_TOKEN=your-api-token-here
+ED_COURSE_ID=84647
+
+# Site Configuration
+SITE_PASSWORD=cs182
+NEXTAUTH_SECRET=100
+NEXTAUTH_URL=http://localhost:3000
+```
+
+**Getting Your EdStem API Token**:
+1. Go to https://edstem.org/us/settings/api-tokens
+2. Create a new API token
+3. Copy it to `ED_API_TOKEN` in your `.env` file
+
+### 3. Export Posts to CSV
+
+```bash
+./export_csv.sh
+```
+
+This will:
+- Fetch all posts from EdStem course 84647
+- Filter for posts with "Participation D" in the title
+- Export to `ingest/participation_d_posts.csv`
+
+### 4. Copy CSV to Web Directory
+
+```bash
+./update-csv-for-vercel.sh
+```
+
+This copies the CSV to `web/data/participation_d_posts.csv` for the web app to read.
+
+### 5. Start Development Server
+
+```bash
+cd web
+npm install
+npm run dev
+```
+
+Or use Docker:
+
+```bash
+docker-compose up -d web
+```
+
+### 6. Access the Application
+
+- Web UI: http://localhost:3000
+- Sign in with your configured `SITE_PASSWORD` (default: `cs182`)
+
+## 📖 How It Works
+
+### Data Flow
+
+1. **Export CSV**: Run `./export_csv.sh` to fetch posts from EdStem
+2. **Filter**: Only posts with "Participation D" in the title are kept
+3. **Convert**: Ed XML content is converted to Markdown with LaTeX support
+4. **Store**: CSV is saved to `ingest/participation_d_posts.csv`
+5. **Deploy**: CSV is copied to `web/data/` for the web app to read
+6. **Display**: Web app reads from CSV and displays posts with filters
+
+### CSV Structure
+
+The CSV contains the following columns:
+- `id` - Post ID from EdStem
+- `title` - Post title
+- `author` - Author name
+- `content` - Post content (Markdown with LaTeX)
+- `posted_at` - Post timestamp
+- `url` - Link to original EdStem post
+- `links` - Semicolon-separated list of URLs
+- `attachments` - Semicolon-separated list of attachment filenames
+
+## 🚀 Deployment to Vercel
+
+### Quick Deploy
+
+1. **Push to GitHub**:
+   ```bash
+   git add .
+   git commit -m "Prepare for Vercel deployment"
+   git push
+   ```
+
+2. **Import to Vercel**:
+   - Go to [vercel.com](https://vercel.com)
+   - Import your GitHub repository
+   - **Set Root Directory to `web`** (important!)
+
+3. **Configure Environment Variables**:
+   In Vercel dashboard → Settings → Environment Variables:
+   - `ED_API_TOKEN` - Your EdStem API token
+   - `ED_COURSE_ID` - `84647`
+   - `NEXTAUTH_SECRET` - Random secret (or use `100`)
+   - `NEXTAUTH_URL` - Your Vercel URL (auto-set)
+   - `SITE_PASSWORD` - Password for site access
+
+4. **Deploy**: Vercel will automatically build and deploy
+
+### Updating CSV Data
+
+When you want to update the displayed posts:
+
+```bash
+# 1. Export fresh data from EdStem
+./export_csv.sh
+
+# 2. Copy to web directory
+./update-csv-for-vercel.sh
+
+# 3. Commit and push
+git add web/data/participation_d_posts.csv
+git commit -m "Update CSV data"
+git push
+```
+
+Vercel will automatically redeploy with the new CSV.
+
+## 🔧 Local Development
+
+### Using Docker
+
+```bash
+# Start web app
+docker-compose up -d web
 
 # View logs
 docker-compose logs -f web
 
-# Run ingestion manually
-docker-compose exec ingest python -m ingest.sync --manual
-
-# Stop services
+# Stop
 docker-compose down
 ```
 
-### Production
+### Without Docker
 
-For production deployment, consider:
+```bash
+# Web app
+cd web
+npm install
+npm run dev
 
-1. **Vercel + Railway/PlanetScale**:
-   - Deploy web app to Vercel
-   - Use Railway or PlanetScale for PostgreSQL
-   - Set environment variables in Vercel dashboard
-
-2. **Fly.io**:
-   - Full stack deployment with Fly Postgres
-   - Zero-config deployments
-
-3. **Railway**:
-   - Deploy both web and ingestion service
-   - Managed PostgreSQL database
-
-### Environment Variables for Production
-
-```env
-# Database
-DATABASE_URL=postgresql://user:pass@host:5432/db
-
-# EdStem (UC Berkeley SSO)
-ED_USERNAME=sanjay.adhikesaven@berkeley.edu
-ED_PASSWORD=your-edstem-password
-ED_COURSE_ID=84647
-
-# Auth
-NEXTAUTH_SECRET=100
-NEXTAUTH_URL=https://your-domain.com
-SITE_PASSWORD=cs182
-
-# Ingestion
-SYNC_INTERVAL_MINUTES=60
+# Export CSV (requires Python)
+cd ingest
+pip install -r requirements.txt
+python simple_sync.py
 ```
+
+## 📁 Project Structure
+
+```
+edthing/
+├── ingest/                    # CSV export scripts
+│   ├── simple_sync.py        # Main CSV export script
+│   ├── participation_d_posts.csv  # Exported CSV data
+│   └── requirements.txt      # Python dependencies
+├── web/                       # Next.js web application
+│   ├── app/                  # Next.js app directory
+│   │   ├── api/             # API routes (read CSV)
+│   │   └── page.tsx         # Main page
+│   ├── components/           # React components
+│   ├── data/                # CSV file location
+│   └── package.json         # Node.js dependencies
+├── export_csv.sh            # Export script wrapper
+├── update-csv-for-vercel.sh # Copy CSV for deployment
+└── docker-compose.yml       # Docker configuration
+```
+
+## 🎨 Features
+
+### Filtering
+
+- **Search**: Keyword search in titles and content
+- **Student Filter**: Filter by student author (only shows students who authored filtered posts)
+- **Sort**: Sort by newest, oldest, or most referenced
+
+### LaTeX Support
+
+Posts with LaTeX math render correctly using KaTeX:
+- Inline math: `\( ... \)`
+- Block math: Automatically detected
+- Full LaTeX syntax support
+
+### Markdown Rendering
+
+- GitHub Flavored Markdown (GFM)
+- Code blocks with syntax highlighting
+- Links and images
+- Tables, lists, and more
 
 ## 🔍 API Endpoints
 
-### Posts
-- `GET /api/posts` - Search and filter posts
+- `GET /api/posts` - List and search posts (reads from CSV)
 - `GET /api/posts/[id]` - Get individual post
+- `GET /api/students` - List all student authors
 
-### Metadata
-- `GET /api/students` - List all students
-- `GET /api/tags` - List all tags
+## 🛡️ Security
 
-### Authentication
-- `POST /api/auth/signin` - Sign in endpoint
-
-## 🛡️ Privacy & Security
-
-- **No Public Data**: Private by default, requires authentication
-- **Credential Security**: EdStem credentials encrypted at rest
-- **Access Control**: Configurable authentication requirements
-- **Data Redaction**: Admin controls to hide sensitive posts/users
+- **Password Protection**: Site requires password to access
+- **CSV in Repository**: CSV is committed to git (ensure no sensitive data)
+- **Environment Variables**: Never commit `.env` file (already in `.gitignore`)
 
 ## 🐛 Troubleshooting
 
-### Common Issues
+### CSV Not Found
 
-1. **Ingestion fails with auth error**:
-   - Verify EdStem credentials
-   - Check course ID is correct
-   - Ensure account has API access
+If you see "No posts found":
+1. Make sure CSV exists: `ls web/data/participation_d_posts.csv`
+2. Run `./export_csv.sh` to generate it
+3. Copy to web: `./update-csv-for-vercel.sh`
 
-2. **Database connection fails**:
-   - Check `DATABASE_URL` format
-   - Verify PostgreSQL is running
-   - Run migrations: `docker-compose exec db psql -U edthing -d edthing -f /docker-entrypoint-initdb.d/schema.sql`
+### LaTeX Not Rendering
 
-3. **Search not working**:
-   - Ensure search vectors are updated
-   - Check PostgreSQL trigram extension is installed
+- Ensure KaTeX CSS is loaded (already included in `globals.css`)
+- Check that content uses `\( ... \)` syntax for inline math
+- Verify `remark-math` and `rehype-katex` are installed
 
-### Logs
+### Filter Not Working
 
-```bash
-# View web app logs
-docker-compose logs web
+- Ensure filter matches exactly: "Participation D" (case-insensitive) in title
+- Re-export CSV if you changed filtering logic: `./export_csv.sh`
 
-# View ingestion logs
-docker-compose logs ingest
+### Vercel Deployment Issues
 
-# View database logs
-docker-compose logs db
-```
+- Make sure Root Directory is set to `web` in Vercel settings
+- Verify all environment variables are set
+- Check build logs for errors
 
-## 📊 Data Model
+## 📝 Updating Posts
 
-### Core Tables
+To refresh the displayed posts:
 
-- **students**: User information and display names
-- **posts**: Main content with full-text search
-- **attachments**: File metadata and download links
-- **links**: Extracted URLs with categorization
-- **ingestion_runs**: Sync tracking and error logging
-- **site_config**: Application configuration
+1. **Fetch from EdStem**:
+   ```bash
+   ./export_csv.sh
+   ```
 
-### Search Indexing
+2. **Copy to web directory**:
+   ```bash
+   ./update-csv-for-vercel.sh
+   ```
 
-Posts are automatically indexed for full-text search on:
-- Title (weighted high)
-- Content (weighted medium)
-- Tags and categories
-- Student names
+3. **For Vercel**: Commit and push the updated CSV
+4. **For local**: Restart the dev server or refresh browser
 
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch
-3. Make changes with tests
+3. Make changes
 4. Submit a pull request
 
 ## 📄 License
@@ -318,7 +313,7 @@ This project is licensed under the MIT License.
 
 ## 🙏 Acknowledgments
 
-- [edpy](https://github.com/bachtran02/edpy) - EdStem API wrapper
+- [edapi](https://pypi.org/project/edapi/) - EdStem API Python library
 - [Next.js](https://nextjs.org/) - React framework
+- [KaTeX](https://katex.org/) - LaTeX rendering
 - [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS
-- [PostgreSQL](https://postgresql.org/) - Advanced database
