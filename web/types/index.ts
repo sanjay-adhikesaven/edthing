@@ -61,6 +61,7 @@ export interface SearchFilters {
   date_from?: string;
   date_to?: string;
   sort_by?: 'newest' | 'oldest' | 'most_referenced';
+  homework?: string; // Homework number filter
 }
 
 export interface SearchResult {

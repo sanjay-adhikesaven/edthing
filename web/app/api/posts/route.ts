@@ -23,6 +23,7 @@ export async function GET(request: NextRequest) {
       const { searchParams } = new URL(request.url);
       const query = searchParams.get('q')?.toLowerCase() || '';
       const studentFilter = searchParams.get('student_id') || '';
+      const homeworkFilter = searchParams.get('homework') || '';
       const page = parseInt(searchParams.get('page') || '1');
       const pageSize = parseInt(searchParams.get('page_size') || '20');
       const sortBy = searchParams.get('sort_by') || 'newest';
@@ -42,6 +43,14 @@ export async function GET(request: NextRequest) {
         filtered = filtered.filter((post: any) => 
           post.author?.toLowerCase() === studentFilter.toLowerCase()
         );
+      }
+
+      // Filter by homework number
+      if (homeworkFilter) {
+        filtered = filtered.filter((post: any) => {
+          const hwMatch = post.title?.match(/HW\s*(\d+)/i);
+          return hwMatch && hwMatch[1] === homeworkFilter;
+        });
       }
 
       // Sort

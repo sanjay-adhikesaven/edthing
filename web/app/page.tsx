@@ -49,6 +49,7 @@ export default function HomePage() {
       if (newFilters.date_from) params.append('date_from', newFilters.date_from);
       if (newFilters.date_to) params.append('date_to', newFilters.date_to);
       if (newFilters.sort_by) params.append('sort_by', newFilters.sort_by);
+      if (newFilters.homework) params.append('homework', newFilters.homework);
 
       params.append('page', pageNum.toString());
       params.append('page_size', '20');
