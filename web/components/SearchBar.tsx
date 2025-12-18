@@ -43,7 +43,7 @@ export function SearchBar({ onSearch, placeholder = "Search posts, titles, conte
       }`}>
         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
           <SearchIcon className={`h-5 w-5 transition-colors ${
-            isFocused ? 'text-primary-500' : 'text-gray-400'
+            isFocused ? 'text-gray-700' : 'text-gray-400'
           }`} />
         </div>
         
@@ -85,10 +85,9 @@ export function SearchBar({ onSearch, placeholder = "Search posts, titles, conte
         </div>
       </div>
 
-      {/* Search tips */}
       {isFocused && (
         <div className="mt-2 text-xs text-gray-500 flex items-center gap-4 animate-fade-in">
-          <span>💡 Tips: Try searching by student name, homework number (HW3), or topic (Muon, SOAP)</span>
+          <span>Try searching by student name, homework number (HW3), or topic (Muon, SOAP).</span>
         </div>
       )}
     </form>

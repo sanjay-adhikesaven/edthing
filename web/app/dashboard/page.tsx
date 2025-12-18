@@ -184,7 +184,7 @@ export default function DashboardPage() {
         {/* Popular Topics */}
         <div className="card">
           <div className="flex items-center gap-3 mb-6">
-            <TagIcon className="h-6 w-6 text-primary-600" />
+            <TagIcon className="h-6 w-6 text-gray-700" />
             <h2 className="text-2xl font-bold text-gray-900">Popular Topics</h2>
           </div>
           <div className="space-y-3">
@@ -195,7 +195,7 @@ export default function DashboardPage() {
                   <div className="flex items-center justify-between mb-1">
                     <Link
                       href={`/?tags=${encodeURIComponent(item.tag)}`}
-                      className="text-sm font-semibold text-gray-900 hover:text-primary-600 transition-colors"
+                      className="text-sm font-semibold text-gray-900 hover:text-gray-700 transition-colors"
                     >
                       {item.tag}
                     </Link>
@@ -205,7 +205,7 @@ export default function DashboardPage() {
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2.5">
                     <div
-                      className="bg-gradient-to-r from-primary-500 to-purple-500 h-2.5 rounded-full transition-all duration-500"
+                      className="bg-gray-800 h-2.5 rounded-full transition-all duration-500"
                       style={{ width: `${percentage}%` }}
                     ></div>
                   </div>
@@ -218,7 +218,7 @@ export default function DashboardPage() {
         {/* Top Contributors */}
         <div className="card">
           <div className="flex items-center gap-3 mb-6">
-            <ChartBarIcon className="h-6 w-6 text-primary-600" />
+            <ChartBarIcon className="h-6 w-6 text-gray-700" />
             <h2 className="text-2xl font-bold text-gray-900">Top Contributors</h2>
           </div>
           <div className="space-y-3">
@@ -229,12 +229,12 @@ export default function DashboardPage() {
                 className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors group"
               >
                 <div className="flex-shrink-0">
-                  <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold shadow-md">
+                  <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-white font-bold">
                     {index + 1}
                   </div>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-semibold text-gray-900 group-hover:text-primary-600 transition-colors truncate">
+                  <div className="text-sm font-semibold text-gray-900 group-hover:text-gray-700 transition-colors truncate">
                     {item.student.display_name}
                   </div>
                   <div className="text-xs text-gray-500">
@@ -242,7 +242,7 @@ export default function DashboardPage() {
                   </div>
                 </div>
                 <div className="flex-shrink-0">
-                  <span className="badge bg-primary-100 text-primary-800 border-primary-200">
+                  <span className="badge bg-gray-200 text-gray-900 border-gray-400">
                     {Math.round((item.count / (stats?.totalPosts || 1)) * 100)}%
                   </span>
                 </div>
@@ -258,10 +258,10 @@ export default function DashboardPage() {
         <div className="card">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
-              <ClockIcon className="h-6 w-6 text-primary-600" />
+              <ClockIcon className="h-6 w-6 text-gray-700" />
               <h2 className="text-2xl font-bold text-gray-900">Recent Posts</h2>
             </div>
-            <Link href="/" className="text-sm font-semibold text-primary-600 hover:text-primary-700">
+            <Link href="/" className="text-sm font-semibold text-gray-700 hover:text-gray-900">
               View all →
             </Link>
           </div>
@@ -270,9 +270,9 @@ export default function DashboardPage() {
               <Link
                 key={post.id}
                 href={`/posts/${post.id}`}
-                className="block p-4 border-2 border-gray-200 rounded-lg hover:border-primary-300 hover:shadow-md transition-all group"
+                className="block p-4 border-2 border-gray-200 rounded-lg hover:border-gray-400 transition-all group"
               >
-                <h3 className="font-semibold text-gray-900 group-hover:text-primary-600 line-clamp-2 mb-2">
+                <h3 className="font-semibold text-gray-900 group-hover:text-gray-700 line-clamp-2 mb-2">
                   {post.title}
                 </h3>
                 <div className="flex items-center gap-3 text-sm text-gray-600">
@@ -303,7 +303,7 @@ export default function DashboardPage() {
               <BookmarkIcon className="h-6 w-6 text-amber-600" />
               <h2 className="text-2xl font-bold text-gray-900">Your Bookmarks</h2>
             </div>
-            <Link href="/bookmarks" className="text-sm font-semibold text-primary-600 hover:text-primary-700">
+            <Link href="/bookmarks" className="text-sm font-semibold text-gray-700 hover:text-gray-900">
               View all →
             </Link>
           </div>
@@ -313,9 +313,9 @@ export default function DashboardPage() {
                 <Link
                   key={post.id}
                   href={`/posts/${post.id}`}
-                  className="block p-4 border-2 border-gray-200 rounded-lg hover:border-amber-300 hover:shadow-md transition-all group"
+                  className="block p-4 border-2 border-gray-200 rounded-lg hover:border-gray-400 transition-all group"
                 >
-                  <h3 className="font-semibold text-gray-900 group-hover:text-primary-600 line-clamp-2 mb-2">
+                  <h3 className="font-semibold text-gray-900 group-hover:text-gray-700 line-clamp-2 mb-2">
                     {post.title}
                   </h3>
                   <div className="flex items-center gap-3 text-sm text-gray-600">

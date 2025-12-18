@@ -1,65 +1,56 @@
 import Link from 'next/link';
-import { AcademicCapIcon, HeartIcon } from '@heroicons/react/solid';
 
 export function Footer() {
-  const currentYear = new Date().getFullYear();
-
   return (
-    <footer className="bg-white border-t border-gray-200 mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
-          {/* Brand */}
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 bg-gradient-to-br from-primary-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <AcademicCapIcon className="h-5 w-5 text-white" />
+    <footer className="mt-auto bg-[#f9f7f5]">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 text-center md:text-left">
+          {/* Left column */}
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold tracking-wide text-gray-900">
+              EECS 182
+            </h2>
+            <nav className="space-y-2 text-sm text-gray-700">
+              <div>
+                <Link href="/" className="hover:text-gray-900 transition-colors">
+                  Weekly Schedule
+                </Link>
               </div>
-              <span className="font-bold text-gray-900">Participation D</span>
-            </div>
-            <p className="text-sm text-gray-600">
-              A study tool for tracking and learning from student participation submissions
-            </p>
+              <div>
+                <Link href="/dashboard" className="hover:text-gray-900 transition-colors">
+                  Office Hours
+                </Link>
+              </div>
+              <div>
+                <Link href="/bookmarks" className="hover:text-gray-900 transition-colors">
+                  Staff
+                </Link>
+              </div>
+            </nav>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-3">Quick Links</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link href="/" className="text-gray-600 hover:text-primary-600 transition-colors">
-                  Browse Posts
+          {/* Right column */}
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold tracking-wide text-gray-900">
+              Policies
+            </h2>
+            <nav className="space-y-2 text-sm text-gray-700">
+              <div>
+                <Link href="/" className="hover:text-gray-900 transition-colors">
+                  Assignments
                 </Link>
-              </li>
-              <li>
-                <Link href="/dashboard" className="text-gray-600 hover:text-primary-600 transition-colors">
-                  Dashboard
+              </div>
+              <div>
+                <Link href="/" className="hover:text-gray-900 transition-colors">
+                  Exam
                 </Link>
-              </li>
-              <li>
-                <Link href="/bookmarks" className="text-gray-600 hover:text-primary-600 transition-colors">
-                  My Bookmarks
+              </div>
+              <div>
+                <Link href="/" className="hover:text-gray-900 transition-colors">
+                  Grading
                 </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Info */}
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-3">About</h3>
-            <p className="text-sm text-gray-600">
-              Showcasing Muon, MuP, Shampoo, and other optimization work from students
-            </p>
-          </div>
-        </div>
-
-        <div className="pt-6 border-t border-gray-200">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-gray-500">
-              © {currentYear} Participation D Study Tool. All rights reserved.
-            </p>
-            <p className="text-sm text-gray-500 flex items-center gap-1">
-              Made with <HeartIcon className="h-4 w-4 text-red-500" /> for students
-            </p>
+              </div>
+            </nav>
           </div>
         </div>
       </div>

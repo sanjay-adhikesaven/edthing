@@ -2,7 +2,7 @@
 
 A simple web application for documenting and displaying student participation submissions from **EdStem course 84647**, specifically filtering for "Participation D" posts.
 
-## 🚀 Features
+## Features
 
 - **CSV-Based Storage**: Simple CSV file storage - no database required
 - **EdStem Integration**: Fetches posts using the `edapi` library
@@ -14,7 +14,7 @@ A simple web application for documenting and displaying student participation su
 - **Authentication**: Password-based access control
 - **Vercel Ready**: Deploy directly to Vercel
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
@@ -31,14 +31,14 @@ A simple web application for documenting and displaying student participation su
                                               └─────────────────┘
 ```
 
-## 📋 Prerequisites
+## Prerequisites
 
 - Docker and Docker Compose (for local development)
 - EdStem API token
 - Node.js 18+ (for local development)
 - Python 3.11+ (for CSV export)
 
-## 🛠️ Quick Start
+## Quick Start
 
 ### 1. Setup Environment
 
@@ -106,7 +106,7 @@ docker-compose up -d web
 - Web UI: http://localhost:3000
 - Sign in with your configured `SITE_PASSWORD` (default: `cs182`)
 
-## 📖 How It Works
+## How It Works
 
 ### Data Flow
 
@@ -129,7 +129,7 @@ The CSV contains the following columns:
 - `links` - Semicolon-separated list of URLs
 - `attachments` - Semicolon-separated list of attachment filenames
 
-## 🚀 Deployment to Vercel
+## Deployment to Vercel
 
 ### Quick Deploy
 
@@ -174,7 +174,7 @@ git push
 
 Vercel will automatically redeploy with the new CSV.
 
-## 🔧 Local Development
+## Local Development
 
 ### Using Docker
 
@@ -203,7 +203,7 @@ pip install -r requirements.txt
 python simple_sync.py
 ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 edthing/
@@ -223,7 +223,7 @@ edthing/
 └── docker-compose.yml       # Docker configuration
 ```
 
-## 🎨 Features
+## Additional Features
 
 ### Filtering
 
@@ -245,19 +245,19 @@ Posts with LaTeX math render correctly using KaTeX:
 - Links and images
 - Tables, lists, and more
 
-## 🔍 API Endpoints
+## API Endpoints
 
 - `GET /api/posts` - List and search posts (reads from CSV)
 - `GET /api/posts/[id]` - Get individual post
 - `GET /api/students` - List all student authors
 
-## 🛡️ Security
+## Security
 
 - **Password Protection**: Site requires password to access
 - **CSV in Repository**: CSV is committed to git (ensure no sensitive data)
 - **Environment Variables**: Never commit `.env` file (already in `.gitignore`)
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### CSV Not Found
 
@@ -300,18 +300,18 @@ To refresh the displayed posts:
 3. **For Vercel**: Commit and push the updated CSV
 4. **For local**: Restart the dev server or refresh browser
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Make changes
 4. Submit a pull request
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - [edapi](https://pypi.org/project/edapi/) - EdStem API Python library
 - [Next.js](https://nextjs.org/) - React framework

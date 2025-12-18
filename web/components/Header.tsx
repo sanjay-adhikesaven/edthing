@@ -50,8 +50,8 @@ export function Header() {
 
   return (
     <header 
-      className={`sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b transition-all duration-200 ${
-        scrolled ? 'border-gray-300 shadow-md' : 'border-gray-200 shadow-sm'
+      className={`sticky top-0 z-50 bg-[#CFCBD4] border-b border-gray-300 transition-all duration-200 ${
+        scrolled ? 'shadow-sm' : ''
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -59,35 +59,27 @@ export function Header() {
           {/* Logo and Brand */}
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary-600 to-purple-600 rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
-                <AcademicCapIcon className="h-6 w-6 text-white" />
-              </div>
               <div className="hidden sm:block">
-                <div className="text-xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors">
+                <div className="text-lg font-semibold text-[#212529]">
                   Participation D
-                </div>
-                <div className="text-xs text-gray-500 font-medium">
-                  Study Tool
                 </div>
               </div>
             </Link>
 
             {/* Navigation Links */}
-            <nav className="hidden md:flex items-center gap-1">
+            <nav className="hidden md:flex items-center gap-6">
               {navLinks.map((link) => {
-                const Icon = link.icon;
                 const isActive = pathname === link.href;
                 return (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all ${
+                    className={`font-medium text-sm transition-colors ${
                       isActive
-                        ? 'bg-primary-100 text-primary-700 shadow-sm'
-                        : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                        ? 'text-[#212529]'
+                        : 'text-[#212529]/70 hover:text-[#212529]'
                     }`}
                   >
-                    <Icon className="h-4 w-4" />
                     {link.label}
                   </Link>
                 );
@@ -103,9 +95,9 @@ export function Header() {
               <div className="relative user-menu">
                 <button
                   onClick={() => setIsMenuOpen(!isMenuOpen)}
-                  className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+                  className="flex items-center gap-3 px-3 py-2 hover:bg-gray-50 transition-colors"
                 >
-                  <div className="w-9 h-9 bg-gradient-to-br from-primary-500 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold shadow-sm">
+                  <div className="w-9 h-9 bg-gray-800 rounded-full flex items-center justify-center text-white font-semibold">
                     {session.user?.name?.charAt(0).toUpperCase() || 'U'}
                   </div>
                   <span className="hidden sm:block text-sm font-medium text-gray-700">
@@ -114,8 +106,8 @@ export function Header() {
                 </button>
 
                 {isMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-200 py-2 animate-scale-in">
-                    <div className="px-4 py-3 border-b border-gray-100">
+                  <div className="absolute right-0 mt-2 w-56 bg-white shadow-lg border border-gray-300 py-2 animate-scale-in">
+                    <div className="px-4 py-3 border-b border-gray-200">
                       <div className="text-sm font-semibold text-gray-900">
                         {session.user?.name}
                       </div>
@@ -125,7 +117,7 @@ export function Header() {
                     </div>
 
                     {/* Mobile nav links */}
-                    <div className="md:hidden py-2 border-b border-gray-100">
+                    <div className="md:hidden py-2 border-b border-gray-200">
                       {navLinks.map((link) => {
                         const Icon = link.icon;
                         return (
@@ -144,7 +136,7 @@ export function Header() {
 
                     <button
                       onClick={() => signOut()}
-                      className="flex items-center gap-3 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                      className="flex items-center gap-3 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                     >
                       <LogoutIcon className="h-4 w-4" />
                       Sign out

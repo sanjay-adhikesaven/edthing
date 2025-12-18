@@ -97,7 +97,7 @@ export default function PostPage({ params }: PostPageProps) {
   if (status === 'loading' || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600"></div>
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
       </div>
     );
   }
@@ -147,7 +147,7 @@ export default function PostPage({ params }: PostPageProps) {
             <div className="sticky top-24">
               <div className="card">
                 <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                  <svg className="h-5 w-5 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                   Related Posts
@@ -157,9 +157,9 @@ export default function PostPage({ params }: PostPageProps) {
                     <Link
                       key={relatedPost.id}
                       href={`/posts/${relatedPost.id}`}
-                      className="block p-3 border-2 border-gray-200 rounded-lg hover:border-primary-300 hover:shadow-md transition-all group"
+                      className="block p-3 border-2 border-gray-200 rounded-lg hover:border-gray-400 transition-all group"
                     >
-                      <h4 className="font-semibold text-sm text-gray-900 group-hover:text-primary-600 line-clamp-2 mb-2">
+                      <h4 className="font-semibold text-sm text-gray-900 group-hover:text-gray-700 line-clamp-2 mb-2">
                         {relatedPost.title}
                       </h4>
                       {relatedPost.author && (

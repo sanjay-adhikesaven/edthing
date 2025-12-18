@@ -3,6 +3,31 @@ import { readFile } from 'fs/promises';
 import { join } from 'path';
 import { parse } from 'csv-parse/sync';
 
+// Topic definitions based on optimizer and keyword mentions
+const TOPIC_DEFINITIONS = [
+  { tag: 'Muon', patterns: ['muon'] },
+  { tag: 'MuP', patterns: ['mup', 'μp'] },
+  { tag: 'Shampoo', patterns: ['shampoo'] },
+  { tag: 'SOAP', patterns: ['soap '] },
+  { tag: 'AdamW', patterns: ['adamw'] },
+  { tag: 'Adam', patterns: [' adam', 'adam '] },
+  { tag: 'SGD', patterns: ['sgd'] },
+  { tag: 'Lion', patterns: ['lion optimizer', ' lion'] },
+  { tag: 'Polar Express', patterns: ['polar express'] },
+  { tag: 'Adafactor', patterns: ['adafactor'] },
+];
+
+const extractTopics = (title: string | undefined, content: string | undefined): string[] => {
+  const text = `${title || ''} ${content || ''}`.toLowerCase();
+  const tags: string[] = [];
+  for (const def of TOPIC_DEFINITIONS) {
+    if (def.patterns.some((p) => text.includes(p))) {
+      tags.push(def.tag);
+    }
+  }
+  return tags;
+};
+
 export async function GET(request: NextRequest) {
   try {
     // Read CSV file
@@ -27,6 +52,10 @@ export async function GET(request: NextRequest) {
       const page = parseInt(searchParams.get('page') || '1');
       const pageSize = parseInt(searchParams.get('page_size') || '20');
       const sortBy = searchParams.get('sort_by') || 'newest';
+      const tagsParam = searchParams.get('tags') || '';
+      const tagsFilter = tagsParam
+        ? tagsParam.split(',').map((t) => t.toLowerCase()).filter(Boolean)
+        : [];
 
       // Filter by search query
       let filtered = records;
@@ -45,11 +74,32 @@ export async function GET(request: NextRequest) {
         );
       }
 
-      // Filter by homework number
+      // Filter by homework number(s) (supports multiple like "6,12")
       if (homeworkFilter) {
+        const homeworkNums = homeworkFilter
+          .split(',')
+          .map((v) => parseInt(v, 10))
+          .filter((v) => !Number.isNaN(v));
+
+        if (homeworkNums.length > 0) {
+          filtered = filtered.filter((post: any) => {
+            if (!post.title) return false;
+            const match = post.title.match(/(?:HW|Homework)\s*0*(\d+)/i);
+            if (!match) return false;
+            const num = parseInt(match[1], 10);
+            if (Number.isNaN(num)) return false;
+            return homeworkNums.includes(num);
+          });
+        }
+      }
+
+      // Filter by topics/tags if provided
+      if (tagsFilter.length > 0) {
         filtered = filtered.filter((post: any) => {
-          const hwMatch = post.title?.match(/HW\s*(\d+)/i);
-          return hwMatch && hwMatch[1] === homeworkFilter;
+          const postTags = extractTopics(post.title, post.content);
+          if (postTags.length === 0) return false;
+          const lower = postTags.map((t) => t.toLowerCase());
+          return tagsFilter.some((tag) => lower.includes(tag));
         });
       }
 
@@ -70,39 +120,52 @@ export async function GET(request: NextRequest) {
       const paginated = filtered.slice(start, end);
 
       return NextResponse.json({
-        posts: paginated.map((post: any) => ({
-          id: post.id,
-          ed_post_id: post.id,
-          title: post.title,
-          content: post.content,
-          author: {
-            display_name: post.author,
-          },
-          posted_at: post.posted_at,
-          url: post.url,
-          links: post.links ? post.links.split('; ').filter((l: string) => l).map((url: string) => {
-            try {
-              return {
-                id: url,
-                url: url,
-                link_type: 'other',
-                domain: new URL(url).hostname,
-              };
-            } catch {
-              return {
-                id: url,
-                url: url,
-                link_type: 'other',
-                domain: url,
-              };
-            }
-          }) : [],
-          attachments: post.attachments ? post.attachments.split('; ').filter((a: string) => a).map((filename: string) => ({
-            id: filename,
-            filename: filename,
-          })) : [],
-          tags: [],
-        })),
+        posts: paginated.map((post: any) => {
+          const tags = extractTopics(post.title, post.content);
+          return {
+            id: post.id,
+            ed_post_id: post.id,
+            title: post.title,
+            content: post.content,
+            author: {
+              display_name: post.author,
+            },
+            posted_at: post.posted_at,
+            url: post.url,
+            links: post.links
+              ? post.links
+                  .split('; ')
+                  .filter((l: string) => l)
+                  .map((url: string) => {
+                    try {
+                      return {
+                        id: url,
+                        url: url,
+                        link_type: 'other',
+                        domain: new URL(url).hostname,
+                      };
+                    } catch {
+                      return {
+                        id: url,
+                        url: url,
+                        link_type: 'other',
+                        domain: url,
+                      };
+                    }
+                  })
+              : [],
+            attachments: post.attachments
+              ? post.attachments
+                  .split('; ')
+                  .filter((a: string) => a)
+                  .map((filename: string) => ({
+                    id: filename,
+                    filename: filename,
+                  }))
+              : [],
+            tags,
+          };
+        }),
         total: filtered.length,
         page,
         page_size: pageSize,

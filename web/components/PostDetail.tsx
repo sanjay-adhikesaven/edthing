@@ -135,7 +135,7 @@ export function PostDetail({ post }: PostDetailProps) {
         <div className="flex items-center gap-2 mb-4">
           {isNew && (
             <span className="badge-new">
-              ✨ New
+              New
             </span>
           )}
           {homeworkNumber && (

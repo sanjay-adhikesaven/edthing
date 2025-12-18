@@ -21,11 +21,22 @@ const getTagColorClass = (tag: string): string => {
   return 'badge-tag';
 };
 
+// Normalize a homework number from a title like "HW06" or "Homework 12" to "6", "12"
+const extractHomeworkNumber = (title: string): string | null => {
+  if (!title) return null;
+  const match = title.match(/(?:HW|Homework)\s*0*(\d+)/i);
+  if (!match) return null;
+  const num = parseInt(match[1], 10);
+  return Number.isNaN(num) ? null : String(num);
+};
+
 export function Filters({ filters, onFiltersChange }: FiltersProps) {
   const [students, setStudents] = useState<Student[]>([]);
   const [availableTags, setAvailableTags] = useState<string[]>([]);
   const [homeworkNumbers, setHomeworkNumbers] = useState<string[]>([]);
-  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['students', 'tags']));
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(
+    new Set(['students', 'homework', 'tags'])
+  );
   const [studentSearch, setStudentSearch] = useState('');
 
   useEffect(() => {
@@ -54,12 +65,14 @@ export function Filters({ filters, onFiltersChange }: FiltersProps) {
           const posts = postsData.posts || [];
           const hwNumbers = new Set<string>();
           posts.forEach((post: any) => {
-            const match = post.title.match(/HW\s*(\d+)/i);
-            if (match) {
-              hwNumbers.add(match[1]);
+            const hw = extractHomeworkNumber(post.title || '');
+            if (hw) {
+              hwNumbers.add(hw);
             }
           });
-          const sortedHwNumbers = Array.from(hwNumbers).sort((a, b) => parseInt(a) - parseInt(b));
+          const sortedHwNumbers = Array.from(hwNumbers).sort(
+            (a, b) => parseInt(a, 10) - parseInt(b, 10)
+          );
           setHomeworkNumbers(sortedHwNumbers);
         }
       } catch (error) {
@@ -137,10 +150,10 @@ export function Filters({ filters, onFiltersChange }: FiltersProps) {
       <div className="card">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <FilterIcon className="h-5 w-5 text-primary-600" />
+            <FilterIcon className="h-5 w-5 text-gray-700" />
             <h3 className="text-lg font-bold text-gray-900">Filters</h3>
             {activeFilterCount > 0 && (
-              <span className="badge bg-primary-600 text-white border-primary-600">
+              <span className="badge bg-gray-900 text-white border-gray-900">
                 {activeFilterCount}
               </span>
             )}
@@ -170,7 +183,7 @@ export function Filters({ filters, onFiltersChange }: FiltersProps) {
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                   (preset === 'all' && !filters.date_from) ||
                   (preset === 'week' && filters.date_from)
-                    ? 'bg-primary-100 text-primary-700 border-2 border-primary-300'
+                    ? 'bg-gray-200 text-gray-900 border-2 border-gray-400'
                     : 'bg-gray-100 text-gray-700 border-2 border-transparent hover:border-gray-300'
                 }`}
               >
@@ -191,7 +204,7 @@ export function Filters({ filters, onFiltersChange }: FiltersProps) {
           className="flex items-center justify-between w-full text-left group"
         >
           <div className="flex items-center gap-2">
-            <UserGroupIcon className="h-5 w-5 text-primary-600" />
+            <UserGroupIcon className="h-5 w-5 text-gray-700" />
             <span className="text-base font-bold text-gray-900">Students</span>
             {filters.student_id && (
               <span className="badge badge-primary text-xs">1</span>
@@ -220,7 +233,7 @@ export function Filters({ filters, onFiltersChange }: FiltersProps) {
                 <label 
                   key={student.id} 
                   className={`flex items-center p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors ${
-                    filters.student_id === student.display_name ? 'bg-primary-50 border-2 border-primary-200' : 'border-2 border-transparent'
+                    filters.student_id === student.display_name ? 'bg-gray-100 border-2 border-gray-400' : 'border-2 border-transparent'
                   }`}
                 >
                   <input
@@ -231,7 +244,7 @@ export function Filters({ filters, onFiltersChange }: FiltersProps) {
                     onChange={(e) => updateFilters({
                       student_id: e.target.checked ? student.display_name : undefined
                     })}
-                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300"
+                    className="h-4 w-4 text-gray-900 focus:ring-gray-500 border-gray-300"
                   />
                   <span className="ml-3 text-sm font-medium text-gray-900 flex-1">
                     {student.display_name}
@@ -248,7 +261,7 @@ export function Filters({ filters, onFiltersChange }: FiltersProps) {
         )}
       </div>
 
-      {/* Homework Filter */}
+      {/* Homework Filter (multi-select, checkbox list like Topics) */}
       {homeworkNumbers.length > 0 && (
         <div className="card">
           <button
@@ -256,11 +269,8 @@ export function Filters({ filters, onFiltersChange }: FiltersProps) {
             className="flex items-center justify-between w-full text-left group"
           >
             <div className="flex items-center gap-2">
-              <AcademicCapIcon className="h-5 w-5 text-primary-600" />
+              <AcademicCapIcon className="h-5 w-5 text-gray-700" />
               <span className="text-base font-bold text-gray-900">Homework</span>
-              {filters.homework && (
-                <span className="badge badge-primary text-xs">HW {filters.homework}</span>
-              )}
             </div>
             <ChevronDownIcon
               className={`h-5 w-5 text-gray-400 group-hover:text-gray-600 transition-all ${
@@ -271,22 +281,45 @@ export function Filters({ filters, onFiltersChange }: FiltersProps) {
 
           {expandedSections.has('homework') && (
             <div className="mt-4">
-              <div className="grid grid-cols-4 gap-2">
-                {homeworkNumbers.map((hwNum) => (
-                  <button
-                    key={hwNum}
-                    onClick={() => updateFilters({ 
-                      homework: filters.homework === hwNum ? undefined : hwNum 
-                    })}
-                    className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all ${
-                      filters.homework === hwNum
-                        ? 'bg-primary-600 text-white shadow-md'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
-                  >
-                    {hwNum}
-                  </button>
-                ))}
+              <div className="space-y-2">
+                {homeworkNumbers.map((hwNum) => {
+                  const selectedList = (filters.homework || '')
+                    .split(',')
+                    .filter(Boolean);
+                  const isSelected = selectedList.includes(hwNum);
+
+                  return (
+                    <label
+                      key={hwNum}
+                      className={`flex items-center p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors ${
+                        isSelected ? 'bg-gray-100 border-2 border-gray-400' : 'border-2 border-transparent'
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={(e) => {
+                          const set = new Set(selectedList);
+                          if (e.target.checked) {
+                            set.add(hwNum);
+                          } else {
+                            set.delete(hwNum);
+                          }
+                          const next = Array.from(set).sort(
+                            (a, b) => parseInt(a, 10) - parseInt(b, 10)
+                          );
+                          updateFilters({
+                            homework: next.length > 0 ? next.join(',') : undefined,
+                          });
+                        }}
+                        className="h-4 w-4 text-gray-900 focus:ring-gray-500 border-gray-300 rounded"
+                      />
+                      <span className="ml-3 text-sm font-medium text-gray-900 flex-1">
+                        HW {hwNum}
+                      </span>
+                    </label>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -300,11 +333,8 @@ export function Filters({ filters, onFiltersChange }: FiltersProps) {
           className="flex items-center justify-between w-full text-left group"
         >
           <div className="flex items-center gap-2">
-            <TagIconOutline className="h-5 w-5 text-primary-600" />
+            <TagIconOutline className="h-5 w-5 text-gray-700" />
             <span className="text-base font-bold text-gray-900">Topics</span>
-            {filters.tags && filters.tags.length > 0 && (
-              <span className="badge badge-primary text-xs">{filters.tags.length}</span>
-            )}
           </div>
           <ChevronDownIcon
             className={`h-5 w-5 text-gray-400 group-hover:text-gray-600 transition-all ${
@@ -319,7 +349,7 @@ export function Filters({ filters, onFiltersChange }: FiltersProps) {
               <label 
                 key={tag} 
                 className={`flex items-center p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors ${
-                  filters.tags?.includes(tag) ? 'bg-primary-50 border-2 border-primary-200' : 'border-2 border-transparent'
+                  filters.tags?.includes(tag) ? 'bg-gray-100 border-2 border-gray-400' : 'border-2 border-transparent'
                 }`}
               >
                 <input
@@ -332,7 +362,7 @@ export function Filters({ filters, onFiltersChange }: FiltersProps) {
                       : currentTags.filter(t => t !== tag);
                     updateFilters({ tags: newTags.length > 0 ? newTags : undefined });
                   }}
-                  className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-gray-900 focus:ring-gray-500 border-gray-300 rounded"
                 />
                 <span className={`ml-3 badge ${getTagColorClass(tag)} border flex-1`}>
                   {tag}
@@ -350,7 +380,7 @@ export function Filters({ filters, onFiltersChange }: FiltersProps) {
           className="flex items-center justify-between w-full text-left group"
         >
           <div className="flex items-center gap-2">
-            <AdjustmentsIcon className="h-5 w-5 text-primary-600" />
+            <AdjustmentsIcon className="h-5 w-5 text-gray-700" />
             <span className="text-base font-bold text-gray-900">More Options</span>
           </div>
           <ChevronDownIcon
@@ -363,13 +393,13 @@ export function Filters({ filters, onFiltersChange }: FiltersProps) {
         {expandedSections.has('other') && (
           <div className="mt-4 space-y-4">
             <label className={`flex items-center p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors ${
-              filters.has_attachments ? 'bg-primary-50 border-2 border-primary-200' : 'border-2 border-transparent'
+              filters.has_attachments ? 'bg-gray-100 border-2 border-gray-400' : 'border-2 border-transparent'
             }`}>
               <input
                 type="checkbox"
                 checked={filters.has_attachments || false}
                 onChange={(e) => updateFilters({ has_attachments: e.target.checked || undefined })}
-                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                className="h-4 w-4 text-gray-900 focus:ring-gray-500 border-gray-300 rounded"
               />
               <span className="ml-3 text-sm font-medium text-gray-900">Has attachments</span>
             </label>

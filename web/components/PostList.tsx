@@ -79,9 +79,9 @@ export function PostList({ posts, loading, total, page, onPageChange }: PostList
     <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div className="text-sm font-medium text-gray-700 bg-gray-100 px-4 py-2 rounded-lg">
-          Showing <span className="text-primary-600 font-bold">{((page - 1) * pageSize) + 1}</span> to{' '}
-          <span className="text-primary-600 font-bold">{Math.min(page * pageSize, total)}</span> of{' '}
-          <span className="text-primary-600 font-bold">{total}</span> posts
+          Showing <span className="text-gray-900 font-bold">{((page - 1) * pageSize) + 1}</span> to{' '}
+          <span className="text-gray-900 font-bold">{Math.min(page * pageSize, total)}</span> of{' '}
+          <span className="text-gray-900 font-bold">{total}</span> posts
         </div>
 
         {/* Pagination */}
@@ -148,7 +148,7 @@ export function PostList({ posts, loading, total, page, onPageChange }: PostList
                   onClick={() => onPageChange(pageNum)}
                   className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
                     pageNum === page
-                      ? 'bg-primary-600 text-white shadow-md scale-110'
+                      ? 'bg-gray-900 text-white shadow-md scale-110'
                       : 'text-gray-700 hover:bg-gray-100'
                   }`}
                 >
